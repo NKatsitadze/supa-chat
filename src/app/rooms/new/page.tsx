@@ -4,18 +4,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Checkbox } from "@/components/ui/checkbox"
 import { Field, FieldContent, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { createRoomSchema } from "@/services/supabase/schemas/rooms"
 import { LoadingSwap } from "@/components/ui/loading-swap"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Link from "next/link"
 import { Controller, useForm } from "react-hook-form"
 import z from "zod"
+import { createRoom } from "@/services/supabase/actions/rooms"
+import { toast } from "sonner"
 
-const formSchema = z.object({
-    name: z.string().min(1).trim(),
-    isPublic: z.boolean()
-})
-
-type FormData = z.infer<typeof formSchema>
+type FormData = z.infer<typeof createRoomSchema>
 
 export default function NewRoomPage () {
     const form = useForm<FormData>({
@@ -23,10 +21,14 @@ export default function NewRoomPage () {
             name: '',
             isPublic: false,
         },
-        resolver: zodResolver(formSchema)
+        resolver: zodResolver(createRoomSchema)
     })
 
-    const handleSubmit = (data: FormData) => {
+    const handleSubmit = async (data: FormData) => {
+        const { error, message } = await createRoom(data)
+        if(error) {
+            toast.error(message || "Failed to create room")
+        }
     }
 
     return (
@@ -69,7 +71,7 @@ export default function NewRoomPage () {
                             )}/>
 
                             <Field className="w-full" orientation="horizontal">
-                                <Button type="submit" className="flex-grow" disabled={form.formState.isSubmitting}>
+                                <Button type="submit" className="grow" disabled={form.formState.isSubmitting}>
                                     <LoadingSwap isLoading={form.formState.isSubmitting}>
                                         Create Room
                                     </LoadingSwap>
