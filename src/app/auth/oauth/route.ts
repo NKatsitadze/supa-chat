@@ -12,12 +12,9 @@ export async function GET(request: Request) {
     const supabase = await createClient()
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error) {
-      const host =
-        request.headers.get('x-forwarded-host') ??
-        request.headers.get('host')
+      const host = request.headers.get('x-forwarded-host') ?? request.headers.get('host')
 
-      const proto =
-        request.headers.get('x-forwarded-proto') ?? 'https'
+      const proto = request.headers.get('x-forwarded-proto') ?? 'https'
 
       return NextResponse.redirect(`${proto}://${host}${next}`)
     }
