@@ -11,12 +11,22 @@ export async function GET(request: Request) {
   if (code) {
     const supabase = await createClient()
     const { error } = await supabase.auth.exchangeCodeForSession(code)
+
     if (!error) {
-      const host = request.headers.get('x-forwarded-host') ?? request.headers.get('host')
+      const siteUrl =
+        process.env.NEXT_PUBLIC_SITE_URL ??
+        (() => {
+          const proto = request.headers.get('x-forwarded-proto') ?? 'https'
+          const host = request.headers.get('x-forwarded-host')
+          return host ? `${proto}://${host}` : undefined
+        })()
 
-      const proto = request.headers.get('x-forwarded-proto') ?? 'https'
+      if (!siteUrl) {
+        // absolute last resort (should never happen)
+        return NextResponse.redirect('/')
+      }
 
-      return NextResponse.redirect(`${proto}://${host}${next}`)
+      return NextResponse.redirect(`${siteUrl}${next}`)
     }
   }
 
