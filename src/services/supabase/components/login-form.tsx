@@ -19,6 +19,9 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'github',
+        options: {
+          redirectTo: `${window.location.origin}/auth/oauth?next=/`,
+        },
       })
 
       if (error) throw error
