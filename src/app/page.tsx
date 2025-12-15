@@ -73,7 +73,6 @@ function RoomList({
   rooms: { id: string; name: string; memberCount: number }[]
   isJoined?: boolean
 }) {
-  // if (rooms.length === 0) return null
 
   return (
     <div className="space-y-4">
