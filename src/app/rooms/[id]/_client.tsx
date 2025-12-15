@@ -1,17 +1,21 @@
-"use client"
+'use client'
 
-import { ChatInput } from "@/components/chat-input"
-import { ChatMessage } from "@/components/chat-message"
-import { InviteUserModal } from "@/components/invite-user-modal"
-import { Button } from "@/components/ui/button"
-import { Message } from "@/services/supabase/actions/messages"
-import { createClient } from "@/services/supabase/client"
-import { RealtimeChannel } from "@supabase/supabase-js"
-import { useEffect, useState } from "react"
+import { ChatInput } from '@/components/chat-input'
+import { ChatMessage } from '@/components/chat-message'
+import { InviteUserModal } from '@/components/invite-user-modal'
+import { Button } from '@/components/ui/button'
+import { Message } from '@/services/supabase/actions/messages'
+import { createClient } from '@/services/supabase/client'
+import { RealtimeChannel } from '@supabase/supabase-js'
+import { useEffect, useState } from 'react'
 
-export function RoomClient({ room, user, messages }: {
-  user: { id: string, name: string, image_url: string | null }
-  room: { id: string, name: string }
+export function RoomClient({
+  room,
+  user,
+  messages,
+}: {
+  user: { id: string; name: string; image_url: string | null }
+  room: { id: string; name: string }
   messages: Message[]
 }) {
   const { connectedUsers, messages: realtimeMessages } = useRealtimeChat({
@@ -28,12 +32,12 @@ export function RoomClient({ room, user, messages }: {
     startingMessages: messages.toReversed(),
   })
   const [sentMessages, setSentMessages] = useState<
-    (Message & { status: "pending" | "error" | "success" })[]
+    (Message & { status: 'pending' | 'error' | 'success' })[]
   >([])
 
   const visibleMessages = oldMessages.concat(
     realtimeMessages,
-    sentMessages.filter(m => !realtimeMessages.find(rm => rm.id === m.id))
+    sentMessages.filter((m) => !realtimeMessages.find((rm) => rm.id === m.id))
   )
 
   return (
@@ -42,7 +46,7 @@ export function RoomClient({ room, user, messages }: {
         <div className="border-b">
           <h1 className="text-2xl font-bold">{room.name}</h1>
           <p className="text-muted-foreground text-sm">
-            {connectedUsers} {connectedUsers === 1 ? "user" : "users"} online
+            {connectedUsers} {connectedUsers === 1 ? 'user' : 'users'} online
           </p>
         </div>
         <InviteUserModal roomId={room.id} />
@@ -50,21 +54,19 @@ export function RoomClient({ room, user, messages }: {
       <div
         className="grow overflow-y-auto flex flex-col-reverse"
         style={{
-          scrollbarWidth: "thin",
-          scrollbarColor: "var(--border) transparent",
+          scrollbarWidth: 'thin',
+          scrollbarColor: 'var(--border) transparent',
         }}
       >
         <div>
-          {status === "loading" && (
+          {status === 'loading' && (
             <p className="text-center text-sm text-muted-foreground py-2">
               Loading more messages...
             </p>
           )}
-          {status === "error" && (
+          {status === 'error' && (
             <div className="text-center">
-              <p className="text-sm text-destructive py-2">
-                Error loading messages.
-              </p>
+              <p className="text-sm text-destructive py-2">Error loading messages.</p>
               <Button onClick={loadMoreMessages} variant="outline">
                 Retry
               </Button>
@@ -74,15 +76,15 @@ export function RoomClient({ room, user, messages }: {
             <ChatMessage
               key={message.id}
               {...message}
-              ref={index === 0 && status === "idle" ? triggerQueryRef : null}
+              ref={index === 0 && status === 'idle' ? triggerQueryRef : null}
             />
           ))}
         </div>
       </div>
       <ChatInput
         roomId={room.id}
-        onSend={message => {
-          setSentMessages(prev => [
+        onSend={(message) => {
+          setSentMessages((prev) => [
             ...prev,
             {
               id: message.id,
@@ -93,34 +95,24 @@ export function RoomClient({ room, user, messages }: {
                 name: user.name,
                 image_url: user.image_url,
               },
-              status: "pending",
+              status: 'pending',
             },
           ])
         }}
-        onSuccessfulSend={message => {
-          setSentMessages(prev =>
-            prev.map(m =>
-              m.id === message.id ? { ...message, status: "success" } : m
-            )
+        onSuccessfulSend={(message) => {
+          setSentMessages((prev) =>
+            prev.map((m) => (m.id === message.id ? { ...message, status: 'success' } : m))
           )
         }}
-        onErrorSend={id => {
-          setSentMessages(prev =>
-            prev.map(m => (m.id === id ? { ...m, status: "error" } : m))
-          )
+        onErrorSend={(id) => {
+          setSentMessages((prev) => prev.map((m) => (m.id === id ? { ...m, status: 'error' } : m)))
         }}
       />
     </div>
   )
 }
 
-function useRealtimeChat({
-  roomId,
-  userId,
-}: {
-  roomId: string
-  userId: string
-}) {
+function useRealtimeChat({ roomId, userId }: { roomId: string; userId: string }) {
   const [connectedUsers, setConnectedUsers] = useState(1)
   const [messages, setMessages] = useState<Message[]>([])
 
@@ -142,12 +134,12 @@ function useRealtimeChat({
       })
 
       newChannel
-        .on("presence", { event: "sync" }, () => {
+        .on('presence', { event: 'sync' }, () => {
           setConnectedUsers(Object.keys(newChannel.presenceState()).length)
         })
-        .on("broadcast", { event: "INSERT" }, payload => {
+        .on('broadcast', { event: 'INSERT' }, (payload) => {
           const record = payload.payload
-          setMessages(prevMessages => [
+          setMessages((prevMessages) => [
             ...prevMessages,
             {
               id: record.id,
@@ -161,8 +153,8 @@ function useRealtimeChat({
             },
           ])
         })
-        .subscribe(status => {
-          if (status !== "SUBSCRIBED") return
+        .subscribe((status) => {
+          if (status !== 'SUBSCRIBED') return
 
           newChannel.track({ userId })
         })
@@ -188,37 +180,37 @@ function useInfiniteScrollChat({
   roomId: string
 }) {
   const [messages, setMessages] = useState<Message[]>(startingMessages)
-  const [status, setStatus] = useState<"idle" | "loading" | "error" | "done">(
-    startingMessages.length === 0 ? "done" : "idle"
+  const [status, setStatus] = useState<'idle' | 'loading' | 'error' | 'done'>(
+    startingMessages.length === 0 ? 'done' : 'idle'
   )
 
   async function loadMoreMessages() {
-    if (status === "done" || status === "loading") return
+    if (status === 'done' || status === 'loading') return
     const supabase = createClient()
-    setStatus("loading")
+    setStatus('loading')
 
     const { data, error } = await supabase
-      .from("message")
-      .select("id, text, created_at, author_id, author:user_profile (name, image_url)")
-      .eq("chat_room_id", roomId)
-      .lt("created_at", messages[0].created_at)
-      .order("created_at", { ascending: false })
+      .from('message')
+      .select('id, text, created_at, author_id, author:user_profile (name, image_url)')
+      .eq('chat_room_id', roomId)
+      .lt('created_at', messages[0].created_at)
+      .order('created_at', { ascending: false })
       .limit(LIMIT)
 
     if (error) {
-      setStatus("error")
+      setStatus('error')
       return
     }
 
-    setMessages(prev => [...data.toReversed(), ...prev])
-    setStatus(data.length < LIMIT ? "done" : "idle")
+    setMessages((prev) => [...data.toReversed(), ...prev])
+    setStatus(data.length < LIMIT ? 'done' : 'idle')
   }
 
   function triggerQueryRef(node: HTMLDivElement | null) {
     if (node == null) return
     const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
+      (entries) => {
+        entries.forEach((entry) => {
           if (entry.isIntersecting && entry.target === node) {
             observer.unobserve(node)
             loadMoreMessages()
@@ -226,7 +218,7 @@ function useInfiniteScrollChat({
         })
       },
       {
-        rootMargin: "50px",
+        rootMargin: '50px',
       }
     )
 

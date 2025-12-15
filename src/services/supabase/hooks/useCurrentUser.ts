@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react"
-import { createClient } from "../client"
-import { User } from "@supabase/supabase-js"
+import { useEffect, useState } from 'react'
+import { createClient } from '../client'
+import { User } from '@supabase/supabase-js'
 
 export function useCurrentUser() {
   const [isLoading, setIsLoading] = useState(true)
@@ -8,7 +8,9 @@ export function useCurrentUser() {
 
   useEffect(() => {
     const supabase = createClient()
-    supabase.auth.getUser().then(({ data }) => {
+    supabase.auth
+      .getUser()
+      .then(({ data }) => {
         setUser(data.user)
       })
       .finally(() => {

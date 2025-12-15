@@ -1,15 +1,10 @@
-"use client"
+'use client'
 
-import { SendIcon } from "lucide-react"
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupButton,
-  InputGroupTextarea,
-} from "./ui/input-group"
-import { FormEvent, useState } from "react"
-import { toast } from "sonner"
-import { Message, sendMessage } from "@/services/supabase/actions/messages"
+import { SendIcon } from 'lucide-react'
+import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupTextarea } from './ui/input-group'
+import { FormEvent, useState } from 'react'
+import { toast } from 'sonner'
+import { Message, sendMessage } from '@/services/supabase/actions/messages'
 
 type Props = {
   roomId: string
@@ -18,20 +13,15 @@ type Props = {
   onErrorSend: (id: string) => void
 }
 
-export function ChatInput({
-  roomId,
-  onSend,
-  onSuccessfulSend,
-  onErrorSend,
-}: Props) {
-  const [message, setMessage] = useState("")
+export function ChatInput({ roomId, onSend, onSuccessfulSend, onErrorSend }: Props) {
+  const [message, setMessage] = useState('')
 
   async function handleSubmit(e?: FormEvent) {
     e?.preventDefault()
     const text = message.trim()
     if (!text) return
 
-    setMessage("")
+    setMessage('')
     const id = crypto.randomUUID()
     onSend({ id, text })
     const result = await sendMessage({ id, text, roomId })
@@ -49,22 +39,17 @@ export function ChatInput({
         <InputGroupTextarea
           placeholder="Type your message..."
           value={message}
-          onChange={e => setMessage(e.target.value)}
+          onChange={(e) => setMessage(e.target.value)}
           className="field-sizing-content min-h-auto"
-          onKeyDown={e => {
-            if (e.key === "Enter" && !e.shiftKey) {
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault()
               handleSubmit()
             }
           }}
         />
         <InputGroupAddon align="inline-end">
-          <InputGroupButton
-            type="submit"
-            aria-label="Send"
-            title="Send"
-            size="icon-sm"
-          >
+          <InputGroupButton type="submit" aria-label="Send" title="Send" size="icon-sm">
             <SendIcon />
           </InputGroupButton>
         </InputGroupAddon>

@@ -1,9 +1,9 @@
-"use client"
+'use client'
 
-import { type ComponentProps, type ReactNode, useTransition } from "react"
-import { Button } from "@/components/ui/button"
-import { toast } from "sonner"
-import { LoadingSwap } from "@/components/ui/loading-swap"
+import { type ComponentProps, type ReactNode, useTransition } from 'react'
+import { Button } from '@/components/ui/button'
+import { toast } from 'sonner'
+import { LoadingSwap } from '@/components/ui/loading-swap'
 import {
   AlertDialog,
   AlertDialogDescription,
@@ -14,12 +14,12 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from '@/components/ui/alert-dialog'
 
 export function ActionButton({
   action,
   requireAreYouSure = false,
-  areYouSureDescription = "This action cannot be undone.",
+  areYouSureDescription = 'This action cannot be undone.',
   ...props
 }: ComponentProps<typeof Button> & {
   action: () => Promise<{ error: boolean; message?: string }>
@@ -31,7 +31,7 @@ export function ActionButton({
   function performAction() {
     startTransition(async () => {
       const data = await action()
-      if (data.error) toast.error(data.message ?? "Error")
+      if (data.error) toast.error(data.message ?? 'Error')
     })
   }
 
@@ -44,9 +44,7 @@ export function ActionButton({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              {areYouSureDescription}
-            </AlertDialogDescription>
+            <AlertDialogDescription>{areYouSureDescription}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
@@ -63,15 +61,12 @@ export function ActionButton({
     <Button
       {...props}
       disabled={props.disabled ?? isLoading}
-      onClick={e => {
+      onClick={(e) => {
         performAction()
         props.onClick?.(e)
       }}
     >
-      <LoadingSwap
-        isLoading={isLoading}
-        className="inline-flex items-center gap-2"
-      >
+      <LoadingSwap isLoading={isLoading} className="inline-flex items-center gap-2">
         {props.children}
       </LoadingSwap>
     </Button>
