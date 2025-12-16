@@ -14,8 +14,15 @@ export function RoomClient({
   user,
   messages,
 }: {
-  user: { id: string; name: string; image_url: string | null }
-  room: { id: string; name: string }
+  user: {
+    id: string
+    name: string
+    image_url: string | null
+  }
+  room: {
+    id: string
+    name: string
+  }
   messages: Message[]
 }) {
   const { connectedUsers, messages: realtimeMessages } = useRealtimeChat({
@@ -126,7 +133,6 @@ function useRealtimeChat({ roomId, userId }: { roomId: string; userId: string })
 
       newChannel = supabase.channel(`room:${roomId}:messages`, {
         config: {
-          private: true,
           presence: {
             key: userId,
           },
