@@ -22,7 +22,7 @@ import z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 const formSchema = z.object({
-  userId: z.string().min(1).trim(),
+  name: z.string().min(1).trim(),
 })
 
 type FormData = z.infer<typeof formSchema>
@@ -34,12 +34,12 @@ export function InviteUserModal({ roomId }: { roomId: string }) {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      userId: '',
+      name: '',
     },
   })
 
   async function onSubmit(data: FormData) {
-    const res = await addUserToRoom({ roomId, userId: data.userId })
+    const res = await addUserToRoom({ roomId, name: data.name })
 
     if (res.error) {
       toast.error(res.message)
@@ -67,12 +67,12 @@ export function InviteUserModal({ roomId }: { roomId: string }) {
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FieldGroup>
             <Controller
-              name="userId"
+              name="name"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="user-id">User ID</FieldLabel>
-                  <Input {...field} id="user-id" aria-invalid={fieldState.invalid} />
+                  <FieldLabel htmlFor="user-name">User Name</FieldLabel>
+                  <Input {...field} id="user-name" aria-invalid={fieldState.invalid} />
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}

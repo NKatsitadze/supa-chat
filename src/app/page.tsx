@@ -21,6 +21,7 @@ import { JoinRoomButton } from '@/components/join-room-button'
 import { createAdminClient } from '@/services/supabase/server'
 import { get } from 'http'
 import { MessagesSquareIcon } from 'lucide-react'
+import { RoomsRealtimeListener } from '@/components/rooms-realtime-listener'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
@@ -55,6 +56,7 @@ export default async function Home() {
 
   return (
     <div className="container mx-auto px-4 py-8 space-y-8">
+      <RoomsRealtimeListener userId={user.id} />
       <RoomList title="Your Rooms" rooms={joinedRooms} isJoined />
       <RoomList
         title="Public Rooms"

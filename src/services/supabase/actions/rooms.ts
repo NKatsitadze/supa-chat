@@ -42,7 +42,7 @@ export async function createRoom(unsafeData: z.infer<typeof createRoomSchema>) {
   redirect(`/rooms/${room.id}`)
 }
 
-export async function addUserToRoom({ roomId, userId }: { roomId: string; userId: string }) {
+export async function addUserToRoom({ roomId, name }: { roomId: string; name: string }) {
   const currentUser = await getCurrentUser()
   if (currentUser == null) {
     return { error: true, message: 'User not authenticated' }
@@ -64,7 +64,7 @@ export async function addUserToRoom({ roomId, userId }: { roomId: string; userId
   const { data: userProfile } = await supabase
     .from('user_profile')
     .select('id')
-    .eq('id', userId)
+    .eq('name', name)
     .single()
 
   if (userProfile == null) {
