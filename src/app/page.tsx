@@ -60,7 +60,7 @@ export default async function Home() {
       <RoomList title="Your Rooms" rooms={joinedRooms} isJoined />
       <RoomList
         title="Public Rooms"
-        rooms={publicRooms.filter((room) => joinedRooms.some((r) => r.id !== room.id))}
+        rooms={publicRooms.filter((room) => !joinedRooms.some((r) => r.id === room.id))}
       />
     </div>
   )

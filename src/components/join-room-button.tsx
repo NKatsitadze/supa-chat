@@ -29,7 +29,6 @@ export function JoinRoomButton({
       return { error: true, message: 'Failed to join room' }
     }
 
-    router.refresh()
     router.push(`/rooms/${roomId}`)
 
     return { error: false }
