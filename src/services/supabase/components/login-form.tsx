@@ -49,15 +49,6 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
             >
               {isLoading ? 'Logging in...' : 'Continue with GitHub'}
             </Button>
-
-            <Button
-              type="button"
-              className="w-full"
-              disabled={isLoading}
-              onClick={() => handleSocialLogin('google')}
-            >
-              {isLoading ? 'Logging in...' : 'Continue with Google'}
-            </Button>
           </div>
         </CardContent>
       </Card>
