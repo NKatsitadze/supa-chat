@@ -83,6 +83,7 @@ export function RoomClient({
             <ChatMessage
               key={message.id}
               {...message}
+              isOwn={message.author_id === user.id}
               ref={index === 0 && status === 'idle' ? triggerQueryRef : null}
             />
           ))}

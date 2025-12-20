@@ -15,15 +15,17 @@ export function ChatMessage({
   created_at,
   status,
   ref,
+  isOwn
 }: Message & {
   status?: 'pending' | 'error' | 'success'
   ref?: Ref<HTMLDivElement>
+  isOwn: boolean
 }) {
   return (
     <div
       ref={ref}
       className={cn(
-        'flex gap-4 px-4 py-2 hover:bg-accent/50',
+        isOwn ? 'flex flex-row-reverse gap-4 px-4 py-2 hover:bg-accent/50' : 'flex gap-4 px-4 py-2 hover:bg-accent/50',
         status === 'pending' && 'opacity-70',
         status === 'error' && 'bg-destructive/10 text-destructive'
       )}
@@ -43,14 +45,14 @@ export function ChatMessage({
           </div>
         )}
       </div>
-      <div className="grow space-y-0.5">
-        <div className="flex items-baseline gap-2">
+      <div className={`${isOwn ? '' : 'grow'} space-y-0.5 max-w-[85%] sm:max-w-[75%] md:max-w-[65%] lg:max-w-[560px]`}>
+        <div className={`flex items-baseline gap-2 ${isOwn ? 'justify-end' : ''}`}>
           <span className="text-sm font-semibold">{author.name}</span>
           <span className="text-xs text-muted-foreground">
             {DATE_FORMATTER.format(new Date(created_at))}
           </span>
         </div>
-        <p className="text-sm wrap-break-words whitespace-pre">{text}</p>
+        <p className="text-sm wrap-break-words">{text}</p>
       </div>
     </div>
   )
