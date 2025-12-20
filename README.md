@@ -57,3 +57,4 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 +
 # npm install
 # npm run dev
+```
