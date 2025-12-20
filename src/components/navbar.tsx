@@ -14,11 +14,7 @@ export default function NavBar() {
         <Link href="/" className="text-xl font-bold">
           SupaChat
         </Link>
-        {isLoading || user == null ? (
-          <Button asChild>
-            <Link href="/auth/login">Sign In</Link>
-          </Button>
-        ) : (
+        {user && (
           <div className="flex items-center gap-2">
             <span className="text-sm text-muted-foreground">
               {user.user_metadata?.preferred_username || user.email}

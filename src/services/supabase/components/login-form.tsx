@@ -10,15 +10,14 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleSocialLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSocialLogin = async (provider: 'github' | 'google') => {
     const supabase = createClient()
     setIsLoading(true)
     setError(null)
 
     try {
       const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'github',
+        provider,
         options: {
           redirectTo: `${window.location.origin}/auth/oauth?next=/`,
         },
@@ -39,14 +38,27 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
           <CardDescription>Sign in to your account to continue</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSocialLogin}>
-            <div className="flex flex-col gap-6">
-              {error && <p className="text-sm text-destructive-500">{error}</p>}
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? 'Logging in...' : 'Continue with GitHub'}
-              </Button>
-            </div>
-          </form>
+          <div className="flex flex-col gap-4">
+            {error && <p className="text-sm text-destructive-500">{error}</p>}
+
+            <Button
+              type="button"
+              className="w-full"
+              disabled={isLoading}
+              onClick={() => handleSocialLogin('github')}
+            >
+              {isLoading ? 'Logging in...' : 'Continue with GitHub'}
+            </Button>
+
+            <Button
+              type="button"
+              className="w-full"
+              disabled={isLoading}
+              onClick={() => handleSocialLogin('google')}
+            >
+              {isLoading ? 'Logging in...' : 'Continue with Google'}
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>
