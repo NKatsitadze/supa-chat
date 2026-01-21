@@ -8,7 +8,7 @@ A realtime chat application built with Next.js and Supabase, focused on realtime
 ![Tablet screen](./public/tablet.webp)
 ![Phone screen](./public/phone.webp)
 
-Live demo: https://your-app.vercel.app
+Live demo: https:realtime-chat-ruddy.vercel.app
 
 ---
 
