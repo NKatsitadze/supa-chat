@@ -14,7 +14,8 @@ jobs:
       - name: Health check
         run: |
           RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" \
-            "${{ secrets.SUPABASE_URL }}/auth/v1/health")
+            "${{ secrets.SUPABASE_URL }}/auth/v1/health" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}")
 
           BODY=$(echo "$RESPONSE" | sed -e 's/HTTP_STATUS:.*//')
           STATUS=$(echo "$RESPONSE" | tr -d '\n' | sed -e 's/.*HTTP_STATUS://')
