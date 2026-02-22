@@ -13,10 +13,14 @@ jobs:
     steps:
       - name: Health check
         run: |
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" \
             "${{ secrets.SUPABASE_URL }}/auth/v1/health")
 
+          BODY=$(echo "$RESPONSE" | sed -e 's/HTTP_STATUS:.*//')
+          STATUS=$(echo "$RESPONSE" | tr -d '\n' | sed -e 's/.*HTTP_STATUS://')
+
           echo "Response status: $STATUS"
+          echo "Response body: $BODY"
 
           if [ "$STATUS" -ge 200 ] && [ "$STATUS" -lt 300 ]; then
             echo "Supabase is alive."
